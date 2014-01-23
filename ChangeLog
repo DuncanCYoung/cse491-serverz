@@ -3,3 +3,6 @@
  * Initialized repository, created server.py and README.
 Updated server.py to send a 200 OK HTTP message to client
 Added Optional step to c.recv(1000)
+
+Added main and handleconn() functions
+Added functionality to handle content, file, image request
