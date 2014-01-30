@@ -32,7 +32,7 @@ def handle_connection(conn):
             'Content-type: text/html\r\n' + \
             '\r\n' + \
             '<h1>Hello, world.</h1>' + \
-            'This is rushjust\'s Web server.' +\
+            'This is youngdun\'s Web server.' +\
             '\r\n'
             
 
