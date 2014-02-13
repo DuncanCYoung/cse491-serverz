@@ -1,13 +1,14 @@
-2014-01-16  Titus Brown  <t@Titus-MacBook-Air-2.local>
-
- * Added in simple HTTP response for HW 1.
-
 2014-01-07  Titus Brown  <t@Titus-MacBook-Air-2.local>
 
  * Initialized repository, created server.py and README.
 
-change for in-class exercise
+2014-01-14 Duncan Young <youngdun@arctic.cse.msu.edu>
+ * Return HTTP response to client
 
-another change
+2014-01-22 Duncan Young <youngdun@arctic.cse.msu.edu>
+ * Added test_server.py for automated testing.
+ * Return different responses for /, /content, /file, and /image paths.
+ * Differentiate between GET and POST requests.
 
-a third change
+2014-01-29
+ * Added support for HTML forms, using both GET and POST.
