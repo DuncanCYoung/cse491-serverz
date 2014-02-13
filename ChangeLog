@@ -1,8 +1,14 @@
 2014-01-07  Titus Brown  <t@Titus-MacBook-Air-2.local>
 
  * Initialized repository, created server.py and README.
-Updated server.py to send a 200 OK HTTP message to client
-Added Optional step to c.recv(1000)
 
-Added main and handleconn() functions
-Added functionality to handle content, file, image request
+2014-01-14 Duncan Young <youngdun@arctic.cse.msu.edu>
+ * Return HTTP response to client
+
+2014-01-22 Duncan Young <youngdun@arctic.cse.msu.edu>
+ * Added test_server.py for automated testing.
+ * Return different responses for /, /content, /file, and /image paths.
+ * Differentiate between GET and POST requests.
+
+2014-01-29
+ * Added support for HTML forms, using both GET and POST.

@@ -25,179 +25,150 @@ class FakeConnection(object):
     def close(self):
         self.is_closed = True
 
-# Test a basic GET call.
+# Test basic GET calls.
 
+# Test path = /
 def test_handle_connection():
     conn = FakeConnection("GET / HTTP/1.0\r\n\r\n")
 
-    # Set the different messages depending on the page
-    
-    expected_return = 'HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n' + \
-    '<h1>Hello, world.</h1>This is youngdun\'s Web server.\r\n' + \
-    '<p><a href="http:///content">Content</a>\r\n</p>' + \
-    '<p><a href="http:///file">Files</a>\r\n</p>' + \
-    '<p><a href="http:///image">Images</a></p>' + \
-    '<p><b>Form with POST</b></p>' + \
-    '<form action= "/submit" method = "POST">' + \
-    '<input type = "text" name ="firstname">' + \
-    '<input type = "text" name = "lastname">' + \
-    '<input type="submit" value="Submit"></form>' + \
-    '<p><b>Form Submission via POST (multipart/form-data)</b></p>' + \
-    '<form action="/submit" method="POST" enctype="multipart/form-data">' + \
-    '<input type="text" name="firstname"><input type="text" name="lastname">' + \
-    '<input type="submit" value="Submit"></form>' + \
-    '<p><b>Form with GET</b></p><form action= "/submit" method = "GET">' + \
-    '<input type = "text" name ="firstname">' + \
-    '<input type = "text" name = "lastname">' + \
-    '<input type="submit" value="Submit"></form>'
-    
-                      
-    # Call the function in server.py with the different connections/pages set up at the top of this function
     server.handle_connection(conn)
 
-    # Test to see if the hmtl matches
-    assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
+    assert 'HTTP/1.0 200' in conn.sent and 'form' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
-def test_content():
-    conn_content = FakeConnection("GET /content HTTP/1.0\r\n\r\n")
+# Test path = /content
+def test_handle_connection_content():
+    conn = FakeConnection("GET /content HTTP/1.0\r\n\r\n")
 
-    # Set the different messages depending on the page
-    content_return ='HTTP/1.0 200 OK\r\n' + \
-                     'Content-type: text/html\r\n' + \
-                     '\r\n' + \
-                     '<h1>Hello, world.</h1>' + \
-                     'This is youngdun\'s Web server.' + \
-                     '\r\n' +\
-                     'This is the content page.'                                                                               
+    server.handle_connection(conn)
 
+    assert 'HTTP/1.0 200' in conn.sent and 'content' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
+# Test path = /file
+def test_handle_connection_file():
+    conn = FakeConnection("GET /file HTTP/1.0\r\n\r\n")
 
-    # Call the function in server.py with the different connections/pages set up at the top of this function
-    server.handle_connection(conn_content)
+    server.handle_connection(conn)
 
+    assert 'HTTP/1.0 200' in conn.sent and 'file' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
-    # Test to see if the hmtl matches
-    assert conn_content.sent == content_return, 'Got: %s' % (repr(conn_content.sent),)
+# Test path = /content
+def test_handle_connection_image():
+    conn = FakeConnection("GET /image HTTP/1.0\r\n\r\n")
+    expected_return = 'HTTP/1.0 200 OK\r\n' + \
+                      'Content-type: text/html\r\n' + \
+                      '\r\n' + \
+                      '<h1>Wow. Such page. Very HTTP response</h1>' + \
+                      'This is some image.'
 
-    
-def test_file():
-    conn_file = FakeConnection("GET /file HTTP/1.0\r\n\r\n")
+    server.handle_connection(conn)
+    print conn.sent
+    assert 'HTTP/1.0 200' in conn.sent and 'image' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
-    # Set the different messages depending on the page
-    file_return = 'HTTP/1.0 200 OK\r\n' + \
-                  'Content-type: text/html\r\n' + \
-                  '\r\n' + \
-                  '<h1>Hello, world.</h1>' + \
-                  'This is youngdun\'s Web server.' + \
-                  '\r\n' +\
-                  'This is the file page.'
+# Test path = /submit
+def test_handle_submit():
+    conn = FakeConnection("GET /submit?firstname=Taylor&lastname=Swift" + \
+                          " HTTP/1.1\r\n\r\n")
 
+    server.handle_connection(conn)
 
-    # Call the function in server.py with the different connections/pages set up at the top of this function
-    server.handle_connection(conn_file)
+    assert 'html' in conn.sent and "Taylor" in conn.sent \
+      and 'Swift' in conn.sent, 'Got: %s' % (repr(conn.sent),)
 
-    # Test to see if the hmtl matches
-    assert conn_file.sent == file_return, 'Got: %s' % (repr(conn_file.sent),)
-    
-    
-def test_image():
-    conn_image = FakeConnection("GET /image HTTP/1.0\r\n\r\n")
+# Test a submit with no first name
+def test_handle_submit_no_first_name():
+    conn = FakeConnection("GET /submit?firstname=&lastname=Swift" + \
+                          " HTTP/1.1\r\n\r\n")
 
+    server.handle_connection(conn)
 
-    # Set the different messages depending on the page
-    image_return = 'HTTP/1.0 200 OK\r\n' + \
-                   'Content-type: text/html\r\n' + \
-                   '\r\n' + \
-                   '<h1>Hello, world.</h1>' + \
-                   'This is youngdun\'s Web server.' + \
-                   '\r\n' + \
-                   'This is the image page.'
+    assert 'html' in conn.sent and "Swift" in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
+# Tests a submit with no last name
+def test_handle_submit_no_last_name():
+    conn = FakeConnection("GET /submit?firstname=Taylor&lastname=" + \
+                          " HTTP/1.1\r\n\r\n")
 
-    # Call the function in server.py with the different connections/pages set up at the top of this function
-    server.handle_connection(conn_image)
+    server.handle_connection(conn)
 
-    # Test to see if the hmtl matches
-    assert conn_image.sent == image_return, 'Got: %s' % (repr(conn_image.sent),)   
+    assert 'html' in conn.sent and "Taylor" in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
+# test 404
+def test_handle_not_found():
+    conn = FakeConnection("GET /poop HTTP/1.0\r\n\r\n")
 
-def test_post():
-    conn_post= FakeConnection("POST /submit HTTP/1.1\r\n\r\nfirstname=Duncan&lastname=Young")
-    post_return =  'HTTP/1.0 200 OK\r\n' + \
-                   'Content-type: text/html\r\n' + \
-                   '\r\n' + \
-                   '<h1>Hello, world.</h1>' + \
-                   'This is youngdun\'s Web server.' + \
-                   '\r\n' +\
-                   'Hello Mr. Duncan Young.'
-    
-    server.handle_connection(conn_post)
-    assert conn_post.sent == post_return, 'Got: %s' % (repr(conn_post.sent),)
+    server.handle_connection(conn)
+    assert 'HTTP/1.0 404' in conn.sent and 'want' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
+# Test POST connections
 
-def test_get():
-        conn_get = FakeConnection("GET /submit?firstname=Justin&lastname=Rush HTTP/1.0\r\n\r\n")
-
-        # Set the different messages depending on the page
-        get_return = 'HTTP/1.0 200 OK\r\n' + \
-                     'Content-type: text/html\r\n' + \
-                     '\r\n' + \
-                     '<h1>Hello, world.</h1>' + \
-                     'This is youngdun\'s Web server.' +\
-                     '\r\n ' +\
-                     '<b> Hello Mr. Justin Rush</b>'
-
-        # Call the function in server.py with the different connections/pages set up at the top of this function
-        server.handle_connection(conn_get)
-
-        # Test to see if the hmtl matches
-        assert conn_get.sent == get_return, 'Got: %s' % (repr(conn_get.sent),)
-                
-def test_not_found():
-        conn_not_found = FakeConnection("GET /DoesNotExist HTTP/1.0\r\n\r\n")
-        
-        # Set the different messages depending on the page
-        not_found_return = 'HTTP/1.0 200 OK\r\n' + \
-        'Content-type: text/html\r\n' + \
-        '\r\n' + \
-        '<h1>Hello, world.</h1>' + \
-        'This is youngdun\'s Web server.' + \
-        '\r\n' + \
-        '<h2>PAGE NOT FOUND.</h2>'
-
-        # Call the function in server.py with the different connections/pages set up at the top of this function
-        server.handle_connection(conn_not_found)
-
-        # Test to see if the hmtl matches
-        assert conn_not_found.sent == not_found_return, 'Got: %s' % (repr(conn_not_found.sent),)
-
+# Test / requests
 def test_handle_connection_post():
-        conn = FakeConnection("POST / HTTP/1.0\r\n\r\n")
-        expected_return = 'HTTP/1.0 200 OK\r\n'+\
-                          'Content-type: text/html\r\n\r\n'+\
-                          '<h1>Hello, world.</h1>' +\
-                          'This is youngdun\'s Web server.\r\n'+\
-                          '<p><a href="http:///content">Content</a>\r\n</p>' +\
-                          '<p><a href="http:///file">Files</a>\r\n</p>'+\
-                          '<p><a href="http:///image">Images</a></p>'+\
-                          '<p><b>Form with POST</b></p>'+\
-                          '<form action= "/submit" method = "POST">'+\
-                          '<input type = "text" name ="firstname">'+\
-                          '<input type = "text" name = "lastname">'+\
-                          '<input type="submit" value="Submit">'+\
-						'<p><b>Form Submission via POST (multipart/form-data)</b></p>'+\
-							'<form action="/submit" method="POST" enctype="multipart/form-data">' + \
-						'<input type="text" name="firstname">' + \
-						'<input type="text" name="lastname">' + \
-						'<input type="submit" value="Submit">' + \
-						'</form>' + \
-                          '</form><p><b>Form with GET</b></p>'+\
-                          '<form action= "/submit" method = "GET">'+\
-                          '<input type = "text" name ="firstname">'+\
-                          '<input type = "text" name = "lastname">'+\
-                          '<input type="submit" value="Submit">'+\
-                          '</form>'
+    conn = FakeConnection("POST / HTTP/1.0\r\n" + \
+      "Content-length: 0\r\n\r\n")
 
+    server.handle_connection(conn)
+    assert 'HTTP/1.0 200' in conn.sent and 'form' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
 
-        server.handle_connection(conn)
-        assert conn.sent == expected_return, 'Got: %s' % (repr(conn.sent),)
+# Test /submit requests (both types)
+def test_handle_submit_post():
+    conn = FakeConnection("POST /submit HTTP/1.1\r\n" + \
+                          "Content-Length: 31\r\n\r\n" + \
+                          "firstname=Taylor&lastname=Swift")
+
+    server.handle_connection(conn)
+    
+    assert 'HTTP/1.0 200' in conn.sent and "Hello Mrs." in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
+    
+def test_handle_submit_post_multipart_and_form_data():
+    conn = FakeConnection("POST /submit " + \
+          "HTTP/1.1\r\nContent-length: 246\r\n\r\n------" + \
+          "WebKitFormBoundaryAaal27xQakxMcNYm\r\n" + \
+          'Content-Disposition: form-data; name="firstname"\r\n\r\nTaylor' + \
+          '\r\n------WebKitFormBoundaryAaal27xQakxMcNYm\r\n' + \
+          'Content-Disposition: form-data; name="lastname"\r\n\r\nSwift' + \
+          '\r\n------WebKitFormBoundaryAaal27xQakxMcNYm--")')
+
+    server.handle_connection(conn)
+    
+    assert 'HTTP/1.0 200' in conn.sent and "Hello Mrs." in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
+
+# test 404
+def test_handle_not_found_post():
+    conn = FakeConnection("POST /butts HTTP/1.1\r\n" + \
+                          "Content-Length: 31\r\n\r\n" + \
+                          "firstname=Taylor&lastname=Swift")
+
+    server.handle_connection(conn)
+    assert 'HTTP/1.0 404' in conn.sent and 'want' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
+
+# Handle large request
+def test_handle_long_request():
+    firstname = lastname = "asdfasdfasdfasdfasdf" * 100
+    conn = FakeConnection("POST /submit HTTP/1.1\r\n" + \
+                          "Content-Length: 4020\r\n\r\n" + \
+                          "firstname=%s&lastname=%s" % (firstname, lastname))
+
+    server.handle_connection(conn)
+    
+    assert 'HTTP/1.0 200' in conn.sent and "Hello Mrs." in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
+
+# Test an empty request
+def test_handle_empty_request():
+  conn = FakeConnection("\r\n\r\n")
+
+  server.handle_connection(conn)
+
+  assert 'HTTP/1.0 404' in conn.sent and 'want' in conn.sent, \
+    'Got: %s' % (repr(conn.sent),)
