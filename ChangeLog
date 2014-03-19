@@ -2,10 +2,10 @@
 
  * Initialized repository, created server.py and README.
 
-2014-01-14 Duncan Young <youngdun@arctic.cse.msu.edu>
+2014-01-14 Cameron Keif <keifcame@arctic.cse.msu.edu>
  * Return HTTP response to client
 
-2014-01-22 Duncan Young <youngdun@arctic.cse.msu.edu>
+2014-01-22 Cameron Keif <keifcame@arctic.cse.msu.edu>
  * Added test_server.py for automated testing.
  * Return different responses for /, /content, /file, and /image paths.
  * Differentiate between GET and POST requests.
