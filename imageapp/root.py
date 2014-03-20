@@ -21,6 +21,7 @@ class RootDirectory(Directory):
 
         the_file = request.form['file']
         print dir(the_file)
+	print the_file.content_type
         print 'received file with name:', the_file.base_filename
         data = the_file.read(int(1e9))
 

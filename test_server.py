@@ -141,7 +141,7 @@ def test_handle_submit_post_multipart_and_form_data():
 
 # test 404
 def test_handle_not_found_post():
-    conn = FakeConnection("POST /nope HTTP/1.1\r\n" + \
+    conn = FakeConnection("POST /butts HTTP/1.1\r\n" + \
                           "Content-Length: 31\r\n\r\n" + \
                           "firstname=Taylor&lastname=Swift")
 

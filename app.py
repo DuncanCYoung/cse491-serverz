@@ -3,6 +3,11 @@
 import cgi
 import urlparse
 import jinja2
+import os
+import traceback
+import urllib
+from StringIO import StringIO
+from urlparse import urlparse, parse_qs
 from wsgiref.util import setup_testing_defaults
 
 def app(environ, start_response):
@@ -51,6 +56,10 @@ def app(environ, start_response):
         elif path == '/submit':
             status = '200 OK'
             response_content = handle_submit_get(environ, env)
+        elif path == '/thumbnails':
+            headers = [('Content-type', 'image/png')]
+            status = '200 OK'
+            response_content = handle_thumbnails(environ, env)
                 
     start_response(status, headers)
     response = []
@@ -75,10 +84,11 @@ def readFile(filepath):
     return data
 
 def handle_file(params, env):
-    return readFile('./files/butts.txt')
+    return readFile('./files/nope.txt')
 
 def handle_image(params, env):
-    return readFile('./images/doge.jpeg')
+    return readFile('./images/beermug.jpeg')
+    
 
 def not_found(params, env):
     return str(env.get_template("not_found.html").render())
@@ -128,3 +138,12 @@ def handle_submit_get(environ, env):
 
     vars = dict(firstname = firstname, lastname = lastname)
     return str(env.get_template("submit_result.html").render(vars))
+            
+def handle_thumbnails(environ, env):
+    name = []
+    for file in sorted(os.listdir('images')):
+        print file
+        name.append(file)
+    params = dict(names=name)
+    template = env.get_template("thumbnails.html")
+    return str(template.render(params).encode('latin-1', 'replace'))

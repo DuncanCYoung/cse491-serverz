@@ -14,9 +14,10 @@ def create_publisher():
 def setup():                            # stuff that should be run once.
     html.init_templates()
 
-    some_data = open('imageapp/tybg.png', 'rb').read()
+    fp = open('imageapp/dice.png', 'rb')
+    some_data = fp.read()
     image.add_image(some_data)
-    
+    fp.close()
 
 def teardown():                         # stuff that should be run once.
     pass
