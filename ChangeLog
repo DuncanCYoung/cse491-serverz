@@ -12,3 +12,15 @@
 
 2014-01-29
  * Added support for HTML forms, using both GET and POST.
+
+2014-03-20
+ * Completed hw8
+ * Tried deathly hard to implement a thumbnails page to no avail
+ * /thumbnails url works, but pictures don't load. Dictionary
+ * creates, but doesn't pass the information to the html template?
+ * I'm still very lost in this, and don't entirely understand what's going on.
+
+2014-3-20
+ * Pics load invididually at /pics/%imagename%, but I can't get the thumbnails.html page to load all the content
+ * the thumbnails.html page loads the header block, but not the content block.
+ * Ran out of time!

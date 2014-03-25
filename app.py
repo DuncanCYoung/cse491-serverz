@@ -3,15 +3,16 @@
 import cgi
 import urlparse
 import jinja2
+import os
+import traceback
+import urllib
+from StringIO import StringIO
+from urlparse import urlparse, parse_qs
 from wsgiref.util import setup_testing_defaults
 
-# A relatively simple WSGI application. It's going to print out the
-# environment dictionary after being updated by setup_testing_defaults
-def simple_app(environ, start_response):
+def app(environ, start_response):
     loader = jinja2.FileSystemLoader('./templates')
     env = jinja2.Environment(loader=loader)
-
-    print(environ)
 
     # By default, set up the 404 page response. If it's
     # a valid page, we change this. If some weird stuff
@@ -45,20 +46,28 @@ def simple_app(environ, start_response):
             status = '200 OK'
             response_content = handle_content(environ, env)
         elif path == '/file':
+            headers = [('Content-type', 'text/plain')]
             status = '200 OK'
             response_content = handle_file(environ, env)
         elif path == '/image':
+            headers = [('Content-type', 'image/jpeg')]
             status = '200 OK'
             response_content = handle_image(environ, env)
         elif path == '/submit':
             status = '200 OK'
             response_content = handle_submit_get(environ, env)
+        elif path == '/thumbnails':
+            headers = [('Content-type', 'image/png')]
+            status = '200 OK'
+            response_content = handle_thumbnails(environ, env)
                 
     start_response(status, headers)
-    return response_content
+    response = []
+    response.append(response_content)
+    return response
 
 def make_app():
-    return simple_app
+    return app
 
 def handle_index(params, env):
     return str(env.get_template("index_result.html").render())
@@ -66,11 +75,20 @@ def handle_index(params, env):
 def handle_content(params, env):
     return str(env.get_template("content_result.html").render())
 
+def readFile(filepath):
+    ''' Reads a file and returns its contents as a string '''
+    f = open(filepath, 'rb')
+    data = f.read()
+    f.close()
+
+    return data
+
 def handle_file(params, env):
-    return str(env.get_template("file_result.html").render())
+    return readFile('./files/nope.txt')
 
 def handle_image(params, env):
-    return str(env.get_template("image_result.html").render())
+    return readFile('./images/beermug.jpeg')
+    
 
 def not_found(params, env):
     return str(env.get_template("not_found.html").render())
@@ -97,7 +115,6 @@ def handle_submit_post(environ, env):
     except KeyError:
       lastname = ''
 
-    print form
     vars = dict(firstname = firstname, lastname = lastname)
     return str(env.get_template("submit_result.html").render(vars))
 
@@ -121,3 +138,12 @@ def handle_submit_get(environ, env):
 
     vars = dict(firstname = firstname, lastname = lastname)
     return str(env.get_template("submit_result.html").render(vars))
+            
+def handle_thumbnails(environ, env):
+    name = []
+    for file in sorted(os.listdir('images')):
+        print file
+        name.append(file)
+    params = dict(names=name)
+    template = env.get_template("thumbnails.html")
+    return str(template.render(params).encode('latin-1', 'replace'))
