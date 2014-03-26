@@ -10,6 +10,8 @@ import imageapp
 import quixote
 import quixote.demo.altdemo
 import app
+from quotes.apps import QuotesApp
+from chat.apps import ChatApp
 
 from StringIO import StringIO
 
@@ -25,7 +27,8 @@ def main():
     args = parser.parse_args()
     appname = args.A[0]
 
-    if appname != "myapp" and appname != "image" and appname != "altdemo":
+    validapps = ["myapp", "image", "altdemo", "quotes", "chat"]
+    if appname not in validapps:
       raise Exception("Invalid application name. Please enter 'myapp', 'image', or 'altdemo'")
     s = socket.socket()         # Create a socket object
     host = socket.getfqdn()     # Get local machine name
@@ -139,7 +142,12 @@ def handle_connection(conn, host, port, appname):
       pass
 
     wsgi_app = quixote.get_wsgi_app()
-
+  elif appname == "quotes":
+    wsgi_app = QuotesApp('./quotes/quotes.txt', './quotes/html')
+    
+  elif appname == "chat":
+    wsgi_app = ChatApp('./chat/html')
+    
   result = wsgi_app(environ, start_response)
   try:
     for response in result:
