@@ -7,7 +7,6 @@ import os
 import traceback
 import urllib
 from StringIO import StringIO
-from urlparse import urlparse, parse_qs
 from wsgiref.util import setup_testing_defaults
 
 def app(environ, start_response):
@@ -39,6 +38,7 @@ def app(environ, start_response):
             status = '200 OK'
             response_content = handle_submit_post(environ, env)
     elif http_method == 'GET':
+        print path
         if path == '/':
             status = '200 OK'
             response_content = handle_index(environ, env)
@@ -57,9 +57,13 @@ def app(environ, start_response):
             status = '200 OK'
             response_content = handle_submit_get(environ, env)
         elif path == '/thumbnails':
-            headers = [('Content-type', 'image/png')]
+            headers = [('Content-type', 'text/html')]
             status = '200 OK'
             response_content = handle_thumbnails(environ, env)
+        elif path[0:5] == '/pics':
+            headers = [('Content-type', 'image/png')]
+            status = '200 OK'
+            response_content = pics(environ, env)
                 
     start_response(status, headers)
     response = []
@@ -87,7 +91,7 @@ def handle_file(params, env):
     return readFile('./files/nope.txt')
 
 def handle_image(params, env):
-    return readFile('./images/beermug.jpeg')
+    return readFile('./images/beermug.png')
     
 
 def not_found(params, env):
@@ -138,12 +142,19 @@ def handle_submit_get(environ, env):
 
     vars = dict(firstname = firstname, lastname = lastname)
     return str(env.get_template("submit_result.html").render(vars))
+    
+def pics(environ, env):
+    pic_file = './images' + environ['PATH_INFO'][5:]
+    print pic_file
+    return readFile(pic_file)
+    
             
 def handle_thumbnails(environ, env):
-    name = []
+    list = []
     for file in sorted(os.listdir('images')):
         print file
-        name.append(file)
-    params = dict(names=name)
-    template = env.get_template("thumbnails.html")
-    return str(template.render(params).encode('latin-1', 'replace'))
+        list.append(file)
+    params = dict(names=list)
+    print params;
+    print str(env.get_template("thumbnails.html").render(params).encode('latin-1', 'replace'))
+    return str(env.get_template("thumbnails.html").render(params).encode('latin-1', 'replace'))

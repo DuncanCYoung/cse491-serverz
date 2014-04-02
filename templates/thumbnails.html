@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %} Thumbnails Page 
+{% endblock title %}
+
+{% block content %}
+
+<h1>Thumbnail Images Page</h1>
+<table width=500 border=0 cellspacing=5>
+  {% for name in names %}
+    {% if loop.index is divisibleby 5 or loop.first %}
+    <tr>
+    {% endif %}
+      <td width=60 height=60 align="center" bgcolor="#F5F5F5">
+          <img src='/pics/{{ name }}' width=50 height=50>
+        </a>
+      </td>
+    {% if (loop.index + 1) is divisibleby 5 or loop.last %}
+    </tr>
+    {% endif %}
+  {% endfor %}
+</table>
+
+{% endblock content %}

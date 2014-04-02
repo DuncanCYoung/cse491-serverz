@@ -24,3 +24,7 @@
  * Pics load invididually at /pics/%imagename%, but I can't get the thumbnails.html page to load all the content
  * the thumbnails.html page loads the header block, but not the content block.
  * Ran out of time!
+
+2014-03-26
+ * Thumbnail page works! if you load myapp and go to /thumbnails it loads all
+ * the pictures in the /images folder.
