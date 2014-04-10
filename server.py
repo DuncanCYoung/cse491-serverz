@@ -27,7 +27,7 @@ def main():
     args = parser.parse_args()
     appname = args.A[0]
 
-    validapps = ["myapp", "image", "altdemo", "quotes", "chat"]
+    validapps = ["myapp", "image", "altdemo", "quotes", "chat", "cookie"]
     if appname not in validapps:
       raise Exception("Invalid application name. Please enter 'myapp', 'image', or 'altdemo'")
     s = socket.socket()         # Create a socket object
@@ -147,6 +147,9 @@ def handle_connection(conn, host, port, appname):
     
   elif appname == "chat":
     wsgi_app = ChatApp('./chat/html')
+  elif appname == "cookie":
+    import cookieapp
+    wsgi_app = cookieapp.wsgi_app
     
   result = wsgi_app(environ, start_response)
   try:

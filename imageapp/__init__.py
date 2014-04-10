@@ -16,8 +16,14 @@ def setup():                            # stuff that should be run once.
 
     fp = open('imageapp/dice.png', 'rb')
     some_data = fp.read()
-    image.add_image(some_data)
+    image.add_image('imageapp/dice.pnh', some_data)
     fp.close()
+    import sqlite3
+    
+    db = sqlite3.connect('images.sqlite')
+    db.execute('CREATE TABLE image_store (i INTEGER PRIMARY KEY, image BLOB)');
+    db.commit()
+    db.close()
 
 def teardown():                         # stuff that should be run once.
     pass
