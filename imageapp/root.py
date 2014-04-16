@@ -29,6 +29,13 @@ class RootDirectory(Directory):
 
         image.add_image(the_file.base_filename, data)
 
+        import sqlite3
+        db = sqlite3.connect('images.sqlite')
+        db.text_factory = bytes
+        db.execute('INSERT INTO image_store (image) VALUES (?)', (data,))
+        db.commit()
+        
+        
         return quixote.redirect('./')
 
     @export(name='image')
