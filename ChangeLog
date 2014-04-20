@@ -29,8 +29,10 @@
  * Thumbnail page works! if you load myapp and go to /thumbnails it loads all
  * the pictures in the /images folder.
  
+2014-4-20
+ * Commenting on images
  Projects Completed:
  4) Imageappp works with all filetypes
  5) Add a Thumbnails url (/thumbnails)
  23) Images can be viewed as their own url
-
+     Commenting on Images
