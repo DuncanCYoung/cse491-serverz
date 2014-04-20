@@ -57,7 +57,54 @@ class RootDirectory(Directory):
         else: # Default to .png for reasons
             response.set_content_type('image/png')
         return img.data
-        
+    #@export(name='retrieve_image')    
+
+    
+    @export(name='get_comments')
+    def get_comments(self):
+        response = quixote.get_response()
+        request = quixote.get_request()
+
+        try:
+            img = image.get_image(int(request.form['num']))
+        except KeyError:
+            img = image.get_latest_image()
+
+        all_comments = []
+        for comment in img.get_comments():
+            print comment
+            all_comments.append("""\
+    <comment>
+     <text>%s</text>
+    </comment>
+    """ % (comment))
+
+        xml = """
+    <?xml version="1.0"?>
+    <comments>
+    %s
+    </comments>
+    """ % ("".join(all_comments))
+
+        return xml
+
+    @export(name='add_comment')
+    def add_comment(self):
+        response = quixote.get_response()
+        request = quixote.get_request()
+
+        try:
+            img = image.get_image(int(request.form['num']))
+        except KeyError:
+            img = image.get_latest_image()
+
+        try:
+            comment = request.form['comment']
+        except:
+            return
+
+        img.add_comment(comment)
+     
 def retrieve_image(request):
     try:
         img = image.get_image(int(request.form['num']))

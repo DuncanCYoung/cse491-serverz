@@ -28,3 +28,4 @@
 2014-03-26
  * Thumbnail page works! if you load myapp and go to /thumbnails it loads all
  * the pictures in the /images folder.
+
