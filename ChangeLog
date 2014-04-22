@@ -33,9 +33,14 @@
  * Commenting on images
  * Test data set for testing metadata
 
+2014-4-22
+ * Implemented a Css!
+ * Thanks to Cam Keif for helping me with this...
+
  Projects Completed:
  4) Imageappp works with all filetypes
  5) Add a Thumbnails url (/thumbnails)
  23) Images can be viewed as their own url
-     Commenting on Images
-    Test data set for testing metadata
+ 8)    Commenting on Images
+ 24)   Test data set for testing metadata
+ 3) Implemented a CSS

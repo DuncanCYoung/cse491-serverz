@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-Here is your image:
-<p>
-<img width=40% src='image_raw?special=latest'/>
-<p>
-<h2>Comments</h2>
-<ul id="comments">
-</ul>
-<input type="text" id='add_comment' />
-<button id="add_comment_button">Add Comment</button>
+<div class = "contentText">
+    Here is your image:
+    <p>
+    <img width=40% src='image_raw?special=latest'/>
+    <p>
+    <h2>Comments</h2>
+    <ul id="comments">
+    </ul>
+    <input type="text" id='add_comment' />
+    <button id="add_comment_button">Add Comment</button>
+</div>
 <script type="text/javascript">
 $.post("get_comments",
     function(xml) { 
