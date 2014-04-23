@@ -10,6 +10,7 @@ import imageapp
 import quixote
 import quixote.demo.altdemo
 import app
+import threading
 from quotes.apps import QuotesApp
 from chat.apps import ChatApp
 
@@ -53,7 +54,11 @@ def main():
         # Establish connection with client.    
         c, (client_host, client_port) = s.accept()
         print 'Got connection from', client_host, client_port, '\n'
-        handle_connection(c, host, port, appname, middle)
+        
+        #handle_connection(c, host, port, appname, middle)
+        t = threading.Thread(target=handle_connection, args = (c, host, port, appname, middle))
+        t.daemon = True
+        t.start()
 
 def handle_connection(conn, host, port, appname, middle):
   environ = {}

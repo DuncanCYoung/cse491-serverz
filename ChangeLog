@@ -40,7 +40,8 @@
 2014-4-22
  * AJAX upload works!
  * MiddleWare Playback works!
- 
+ * Threading in server.py works! I know it does because I have the thread call
+  handle connection instead of doing it myself, and it gets called
 
 
  Projects Completed:
@@ -52,3 +53,4 @@
  3) Implemented a CSS
     AJAX upload
     Middleware Playback
+    Multithreading in wsgi app
