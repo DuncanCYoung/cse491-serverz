@@ -24,6 +24,8 @@ def main():
     parser.add_argument('-A', metavar='-A', type=str, nargs=1,
                    help='the app to run (image, altdemo, or myapp)')
 
+    parser.add_argument('-M', '--Middleware', action='store_true', default='false', help="adding the "+ \
+                        "-M flag will play communication between the server and components")
     args = parser.parse_args()
     appname = args.A[0]
 
@@ -33,6 +35,7 @@ def main():
     s = socket.socket()         # Create a socket object
     host = socket.getfqdn()     # Get local machine name
     port = args.p
+    middle = args.Middleware
 
     if port < 8000 or port > 9999:
       port = random.randint(8000,9999)
@@ -50,9 +53,9 @@ def main():
         # Establish connection with client.    
         c, (client_host, client_port) = s.accept()
         print 'Got connection from', client_host, client_port, '\n'
-        handle_connection(c, host, port, appname)
+        handle_connection(c, host, port, appname, middle)
 
-def handle_connection(conn, host, port, appname):
+def handle_connection(conn, host, port, appname, middle):
   environ = {}
   request = conn.recv(1)
   
@@ -150,6 +153,10 @@ def handle_connection(conn, host, port, appname):
   elif appname == "cookie":
     import cookieapp
     wsgi_app = cookieapp.wsgi_app
+  if(middle):
+      print "Using Middleware Playback!\,"
+      from middleware_playback import MiddlewarePlayback
+      wsgi_app = MiddlewarePlayback(wsgi_app)
     
   result = wsgi_app(environ, start_response)
   try:
