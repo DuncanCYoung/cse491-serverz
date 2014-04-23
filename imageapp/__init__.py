@@ -4,7 +4,7 @@ from quixote.publish import Publisher
 
 # this imports the class RootDirectory from the file 'root.py'
 from .root import RootDirectory
-from . import html, image
+from . import html, image, javascript
 
 def create_publisher():
      p = Publisher(RootDirectory(), display_exceptions='plain')
@@ -13,6 +13,7 @@ def create_publisher():
  
 def setup():                            # stuff that should be run once.
     html.init_templates()
+    javascript.init_javascript()
 
     fp = open('imageapp/dice.png', 'rb')
     some_data = fp.read()

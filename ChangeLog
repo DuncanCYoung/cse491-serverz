@@ -37,6 +37,11 @@
  * Implemented a Css!
  * Thanks to Cam Keif for helping me with this...
 
+2014-4-22
+ * AJAX upload works!
+ 
+
+
  Projects Completed:
  4) Imageappp works with all filetypes
  5) Add a Thumbnails url (/thumbnails)
@@ -44,3 +49,4 @@
  8)    Commenting on Images
  24)   Test data set for testing metadata
  3) Implemented a CSS
+    AJAX upload

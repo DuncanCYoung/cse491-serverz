@@ -3,14 +3,18 @@
 {% block content %}
 
 <div class="contentText">
+Upload with AJAX:
 
-Upload a PNG:
-
-<form enctype='multipart/form-data' action='upload_receive' method='POST'>
-Filename: <input type='file' name='file'><p>
-<input type='submit'>
+<form id='form' enctype='multipart/form-data' action='upload_receive' method='POST'>
+Filename: <input id='file' type='file' name='file'><p>
+<input style='display:none' type='submit'>
 </form>
 
+<span id='success' style='display:none'>Successful Upload!</span>
+</br>
+<img id='image' src=''/>
+
+<script type='text/javascript' src='ajaxUpload.js'></script>
 </div>
 
 {% endblock %}
