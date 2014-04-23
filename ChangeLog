@@ -42,6 +42,13 @@
  * MiddleWare Playback works!
  * Threading in server.py works! I know it does because I have the thread call
   handle connection instead of doing it myself, and it gets called
+ * Ubuntu hosting - Hear me out on this one. I know this isn't my work, I found this earlier in 
+	the semester on matheusldaraujo's github. My mom wants me to create a website for her this
+	summer and I plan on using something along the lines of this to get the service and just
+	uploading some basic html/css to get basically a pretty looking text file . So I could do
+	this process now, and pay for a server just for a few months, but it would look exactly the
+	same except with pictures of my browser instead of his. I was hoping to not count this as a
+	project, and maybe I'll find time to implement an 11th project and can forget about this 	one.
 
 
  Projects Completed:
@@ -54,3 +61,4 @@
     AJAX upload
     Middleware Playback
     Multithreading in wsgi app
+    Ubuntu hosting tutorial in Ubuntu_hosting folder
