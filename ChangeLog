@@ -39,6 +39,7 @@
 
 2014-4-22
  * AJAX upload works!
+ * MiddleWare Playback works!
  
 
 
@@ -50,3 +51,4 @@
  24)   Test data set for testing metadata
  3) Implemented a CSS
     AJAX upload
+    Middleware Playback
